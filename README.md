@@ -1,2 +1,2 @@
-# blog-scaling
-Blog-scaling
+# blog
+Blog
