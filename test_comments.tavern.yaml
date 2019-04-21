@@ -1,0 +1,98 @@
+---
+test_name: Create a user
+stages:
+- name: Create a new user
+  request:
+    url: http://localhost:5000/users
+    json:
+      username: user30@gmail.com
+      password: qwe
+      display_name: user30
+    method: POST
+    headers:
+      content-type: application/json
+  response:
+    status_code: 201
+---
+
+---
+test_name: Post an article
+stages:
+- name: Post an article
+  request:
+    url: http://localhost:5100/articles
+    method: POST
+    auth:
+    - user30@gmail.com
+    - qwe
+    json:
+      text: This is my 1st article
+      author: AB
+      title: 1st article
+      url: abc.com
+    headers:
+      content-type: application/json
+  response:
+    status_code: 201
+---
+
+---
+test_name: Try to add a comment to an article that doesn’t exist
+stages:
+- name: Try to add a comment to an article that doesn’t exist
+  request:
+    url: http://localhost:5200/comments
+    json:
+      user_id: 1
+      author: ABCD
+      title: 1st articl1
+      display_name: user1
+      comment: This is a Comment
+    method: POST
+    auth:
+    - user30@gmail.com
+    - qwe
+    headers:
+      content-type: application/json
+  response:
+    status_code: 404
+---
+
+---
+test_name: Post an anonymous comment on an article
+stages:
+- name: Post an anonymous comment on an article
+  request:
+    url: http://localhost:5200/comments
+    json:
+      author: AB
+      title: 1st article
+      comment: This is a Comment
+    method: POST
+    headers:
+      content-type: application/json
+  response:
+    status_code: 201
+---
+
+---
+test_name: Post an authenticated comment on an article
+stages:
+- name: Post an authenticated comment on an article
+  request:
+    url: http://localhost:5200/comments
+    json:
+      user_id: 1
+      author: AB
+      title: 1st article
+      display_name: user30
+      comment: This is a Comment
+    method: POST
+    auth:
+    - user30@gmail.com
+    - qwe
+    headers:
+      content-type: application/json
+  response:
+    status_code: 201
+---
